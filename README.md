@@ -64,3 +64,4 @@ The Jenkinsfile defines the CI/CD pipeline for automated testing and building.
 ## Webhook Test
 Testing automatic build trigger via GitHub webhook.
 Test after disabling SSL verification
+Testing Poll SCM automation
