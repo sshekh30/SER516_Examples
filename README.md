@@ -60,3 +60,6 @@ This project includes references to Taiga issues in commit messages and code com
 
 ## Jenkins Integration
 The Jenkinsfile defines the CI/CD pipeline for automated testing and building.
+
+## Webhook Test
+Testing automatic build trigger via GitHub webhook.
