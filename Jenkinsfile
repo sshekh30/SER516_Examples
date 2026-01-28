@@ -53,21 +53,17 @@ pipeline {
     
     post {
         success {
-            echo 'Build completed successfully!'
-            echo 'Taiga Task: TG-5 - COMPLETED'
-            echo 'All tests passed. Ready for deployment.'
-            
             script {
+                // Get commit message FIRST, before workspace cleanup
+                def commitMsg = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
+                echo "Commit message: ${commitMsg}"
+                
                 // Taiga API configuration
                 def taigaToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY5NzI3MjkxLCJqdGkiOiJiMzE3Mzg1YjViOWU0N2RiOTY1YzBjMDA5NjhmNGE4OSIsInVzZXJfaWQiOjV9.aVwfQFUklygMOTVdN4ty-yht2cVQ8G7rnTzy2IDzVcs'
                 def taigaUrl = 'https://swent0linux.asu.edu/taiga/api/v1'
                 def projectId = 3  // Taiga project ID
                 def buildUrl = "${env.BUILD_URL}"
                 def buildNumber = "${env.BUILD_NUMBER}"
-                
-                // Get commit message to find referenced tasks
-                def commitMsg = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
-                echo "Commit message: ${commitMsg}"
                 
                 // Find all TG-X references in commit message (e.g., TG-1, TG-5)
                 def matcher = (commitMsg =~ /TG-(\d+)/)
@@ -95,7 +91,6 @@ pipeline {
                         ).trim()
                         
                         // Parse JSON to get task ID
-                        // Simple parsing: look for "id": <number> pattern
                         def idMatcher = (taskListJson =~ /"id":\s*(\d+)/)
                         if (idMatcher.find()) {
                             def taskId = idMatcher[0][1]
@@ -133,13 +128,16 @@ pipeline {
                         }
                     } catch (Exception e) {
                         echo "✗ Error updating task TG-${taskRef}: ${e.message}"
-                        // Continue with other tasks even if one fails
                     }
                 }
                 
                 if (referencedTaskRefs.isEmpty()) {
                     echo "No Taiga task references found in commit message"
                 }
+                
+                echo 'Build completed successfully!'
+                echo 'Taiga Task: TG-5 - COMPLETED'
+                echo 'All tests passed. Ready for deployment.'
             }
         }
         failure {
