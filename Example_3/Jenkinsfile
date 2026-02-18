@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                dir('Example_3') {
+                    sh 'poetry install'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('Example_3') {
+                    sh 'poetry run pytest tests/ -v -s'
+                }
+            }
+        }
+
+        // -------------------------------------------------------
+        // Optional Stage: Uncomment and customize to experiment!
+        // -------------------------------------------------------
+        // stage('My Custom Stage') {
+        //     steps {
+        //         dir('Example_3') {
+        //             // sh 'echo "Hello from my custom stage!"'
+        //             // sh 'poetry run pytest tests/test_greeter.py::TestGreeter::test_greet_formal -v -s'
+        //         }
+        //     }
+        // }
+        // -------------------------------------------------------
+
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Check the logs above.'
+        }
+    }
+}
