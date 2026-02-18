@@ -14,6 +14,7 @@ The goal is to understand how unit tests are written in Python and how Jenkins a
 | Jenkins | CI server that runs the pipeline on each commit  |
 
 ## Project Structure
+
 ```
 Example_3/
 ├── Jenkinsfile                  # Jenkins pipeline configuration
@@ -45,9 +46,10 @@ Make sure you have the following installed:
 > ```
 
 ## Step 2 — Clone the Repository
+
 ```bash
-git clone https://github.com/sshekh30/SER516_Examples.git
-cd SER516_Examples/Example_3
+git clone <repo-url>
+cd <repo-folder>/Example_3
 ```
 
 ## Step 3 — Install Dependencies and Run Tests Locally
@@ -89,16 +91,21 @@ PASSED
 2. Navigate to your group folder
 3. Click **New Item** → name it `Example_3` → select **Pipeline** → click OK
 4. Under **Pipeline**, set **Definition** to `Pipeline script from SCM`
-5. Set **SCM** to `Git` and enter the repository URL:  
-   `https://github.com/sshekh30/SER516_Examples.git`
+5. Set **SCM** to `Git` and enter your repository URL
 6. Under **Branches to build**, change `*/master` to `*/main`
-7. Set **Script Path** to `Example_3/Jenkinsfile`
+7. Set **Script Path** to the path of the Jenkinsfile relative to the root of your repo.  
+   For example, if your repo contains an `Example_3` folder, set it to `Example_3/Jenkinsfile`
 8. Under **Build Triggers**, check **Poll SCM** and set the schedule to `* * * * *` (polls every minute)
 9. Click **Save** then click **Build Now** to trigger the first build
+
+> **Important — Docker Agent:**  
+> The Jenkinsfile uses a Docker agent (`python:3`) to run the pipeline inside a Python container. This means Jenkins must have Docker available and running. If the build fails with a Docker-related error, Please reach out.  
+> On the first run, Jenkins will pull the `python:3` image from Docker Hub which may take a minute or two. Subsequent builds will be faster.
 
 ## Step 6 — Trigger the Pipeline with a Commit
 
 Make a small change (e.g., add a comment), commit, and push:
+
 ```bash
 git add .
 git commit -m "Trigger pipeline"

@@ -40,8 +40,8 @@ Make sure you have the following installed:
 ## Step 2 — Clone the Repository
 
 ```bash
-git clone https://github.com/sshekh30/SER516_Examples.git
-cd SER516_Examples/Example_2
+git clone 
+cd /Example_2
 ```
 
 ## Step 3 — Build and Run the Tests Locally
